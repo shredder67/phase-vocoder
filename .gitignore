@@ -1,2 +1,7 @@
+.vscode
+**/__pyache__
+*.py[cod]
+
 models
 env
+test_mono_r05.wav

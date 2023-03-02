@@ -2,3 +2,5 @@ numpy
 matplotlib
 scipy
 librosa
+click
+numba
