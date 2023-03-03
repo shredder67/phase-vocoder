@@ -42,7 +42,7 @@ def stft(x: np.ndarray, sr:int,  N: int, hop_size: int) -> np.ndarray:
     w = get_hann_values(N)
     for i in range(frames):
         frame = x[i*hop_size:i*hop_size + N] * w
-        X[:, i] = spft.fft(frame, N)[:freq_bins]
+        X[:, i] = spft.fft(frame / np.sqrt(N), N)[:freq_bins]
     return X
 
 
@@ -86,12 +86,11 @@ def synthesis(X: np.ndarray, n: int, new_n: int, sr: int, N: int, hs_a: int, hs_
     ## Returns:
     `y: np.ndarray` - synthesized signal (stretched or compressed without changed pitch)
     """
-
     q = np.zeros((X.shape[1], new_n))
     y = np.zeros(new_n)
     w = get_hann_values(N)
     for i in range(X.shape[1]):
-        q[i, i*hs_s:i*hs_s + N] = np.real(spft.ifft(X[:, i] * np.sqrt(2), N)) * w
+        q[i, i*hs_s:i*hs_s + N] = np.real(spft.ifft(X[:, i] * np.sqrt(2*N), N)) * w
     
     # add overlapping windows
     for i in range(X.shape[1]):
