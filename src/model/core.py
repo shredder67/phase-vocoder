@@ -18,6 +18,7 @@ def hanning_window(n, N):
 
 
 def get_hann_values(N):
+    """Returns array of hanning window values for each n in range(N)"""
     return np.array([hanning_window(n, N) for n in range(N)])
 
 
@@ -38,7 +39,7 @@ def stft(x: np.ndarray, sr:int,  N: int, hop_size: int) -> np.ndarray:
     freq_bins = int(N // 2 + 1) # -> (0, sr/2)Hz range
     frames = (len(x) - N) // hop_size + 1 
     X = np.zeros((freq_bins, frames), dtype='complex_')
-    w = np.array([hanning_window(n, N) for n in range(N)]) # precalculated hanning window function values
+    w = get_hann_values(N)
     for i in range(frames):
         frame = x[i*hop_size:i*hop_size + N] * w
         X[:, i] = spft.fft(frame, N)[:freq_bins]
@@ -88,7 +89,7 @@ def synthesis(X: np.ndarray, n: int, new_n: int, sr: int, N: int, hs_a: int, hs_
 
     q = np.zeros((X.shape[1], new_n))
     y = np.zeros(new_n)
-    w = np.array([hanning_window(n, N) for n in range(N)]) # precalculated hanning window function values
+    w = get_hann_values(N)
     for i in range(X.shape[1]):
         q[i, i*hs_s:i*hs_s + N] = np.real(spft.ifft(X[:, i] * np.sqrt(2), N)) * w
     
