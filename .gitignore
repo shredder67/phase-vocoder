@@ -1,5 +1,5 @@
 .vscode
-**/__pyache__
+**/__pycache__
 *.py[cod]
 
 models

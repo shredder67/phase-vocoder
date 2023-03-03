@@ -1,13 +1,12 @@
 import numpy as np
-import scipy.io.wavfile as spiowf
-
+import soundfile as sf
 
 def read_file(file: str) -> np.ndarray:
     """reads a .wav file and returns the data as a numpy array"""
-    sr, data = spiowf.read(file)
+    data, sr = sf.read(file)
     return sr, data
 
 
 def write_file(output_file: str, data: np.ndarray, sr: int):
     """writes a .wav file from a numpy array"""
-    spiowf.write(output_file, sr, data)
+    sf.write(output_file, data, sr)
