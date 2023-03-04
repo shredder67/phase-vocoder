@@ -5,3 +5,5 @@
 models
 env
 test_mono_r05.wav
+
+*.wav
