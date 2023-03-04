@@ -22,4 +22,4 @@ To run, simply copy this:
 ## References
 
 1. Guitar Pitch Tutorial Algorithm description [[url](https://www.guitarpitchshifter.com/algorithm.html)]
-2. Awesome video on intuition behind FT in general [[url](https://www.guitarpitchshifter.com/algorithm.html)]
+2. Awesome video on intuition behind FT in general [[url](https://www.youtube.com/watch?v=KxRmbtJWUzI)]

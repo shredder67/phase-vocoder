@@ -4,7 +4,7 @@ from src import *
 
 @click.command()
 @click.argument("input_file", type=click.Path(exists=True), default="./data/test_mono.wav")
-@click.argument("output_file", type=click.Path(exists=False), default="./test_mono_r05.wav")
+@click.argument("output_file", type=click.Path(exists=False), default="./test_mono_r2.wav")
 @click.argument("stretch_ratio", type=float, default=2.0)
 def synthesize_stretched_audio(input_file, output_file, stretch_ratio):
     try:

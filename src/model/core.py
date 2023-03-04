@@ -28,9 +28,8 @@ def stft(x: np.ndarray, sr:int,  N: int, hop_size: int) -> np.ndarray:
     ## Parameters:
     - `x: np.ndarray` - source digital signal
     - `sr: int` - sampling rate of signal
-    - `frame_size: int` - size of single frame (frame_size assumed to be equal to window_size)
+    - `N: int` - size of single frame (frame_size assumed to be equal to window_size)
     - `hop_size: int` - size of hop between frames, 1/hop_size = overlap
-    - `N: int` - size of Hammon window
 
     ## Returns:
     - `X: np.ndarray` - freq_bins/frames matrix
@@ -51,11 +50,11 @@ def processing(X: np.ndarray, sr: int, hs_a: int, hs_s: int) -> np.ndarray:
     ## Parameters:
     - `X: np.ndarray` - freq_bins/frames matrix
     - `sr: int` - sampling rate of original signal
-    - `hs_a: int` - hop size of original signal
-    - `hs_s: int` - hop size of stretched signal
+    - `hs_a: int` - hop size between windows at analysis stage
+    - `hs_s: int` - hop size between windows at synthesis stage
 
     ## Returns:
-    `X_s: np.ndarray` - freq_bins/frames matrix
+    `X_s: np.ndarray` - freq_bins/frames matrix with fixed phases
     """
     w_bin = (np.arange(X.shape[0]) * sr / X.shape[0]) # freqs per each bin
     w_bin = np.broadcast_to(w_bin, X.shape[::-1]).T
@@ -74,16 +73,14 @@ def processing(X: np.ndarray, sr: int, hs_a: int, hs_s: int) -> np.ndarray:
     return X_s
 
 
-def synthesis(X: np.ndarray, n: int, new_n: int, sr: int, N: int, hs_a: int, hs_s: int) -> np.ndarray:
+def synthesis(X: np.ndarray, new_n: int, N: int, hs_s: int) -> np.ndarray:
     """Apply ifft to each frame with hanning window and add overlapping windows
     
     ## Parameters:
     - `X: np.ndarray` - freq_bins/frames matrix
-    - `n: int` - number of samples in original signal
-    - `sr: int` - sampling rate of original signal
+    - `new_n: int` - number of samples in stretched signal
     - `N: int` - size of Hanning window
-    - `hs_a: int` - size of hop between frames during analysis phase
-    - `r: Union[float, int]` - stretch ratio 
+    - `hs_s: int` - hop size between windows at synthesis stage
 
     ## Returns:
     `y: np.ndarray` - synthesized signal (stretched or compressed without changed pitch)
@@ -108,6 +105,6 @@ def stretch_audio(x, sr, stretch_ratio, N=2048, hs=512):
     new_n, new_hs = get_stretched_params(n, N, hs, stretch_ratio)
     X = stft(x, sr, N, hs)
     X_s = processing(X, sr, hs, new_hs)
-    y = synthesis(X_s, n, new_n, sr, N, hs, new_hs)
+    y = synthesis(X_s, new_n, N, new_hs)
     return y
     
