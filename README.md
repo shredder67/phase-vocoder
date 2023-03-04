@@ -19,6 +19,10 @@ To run, simply copy this:
 ./run.sh [input_file.wav] [output_file.wav] [stretch_ratio]
 ```
 
+## Results
+
+![](./docs/res.png)
+
 ## References
 
 1. Guitar Pitch Tutorial Algorithm description [[url](https://www.guitarpitchshifter.com/algorithm.html)]
