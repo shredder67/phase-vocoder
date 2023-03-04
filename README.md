@@ -13,19 +13,10 @@ git clone git@github.com:shredder67/vocoder.git
 cd vocoder
 ```
 
-If you are using Linux/MacOS, simply run (it will install all deps and run program)
+To run, simply copy this:
 
 ```
 ./run.sh [input_file.wav] [output_file.wav] [stretch_ratio]
-```
-
-If you are usign Windows, run this
-
-```
-python -m venv env
-env\Scripts\activate
-pip install -r requirements.txt
-python main.py [input_file.wav] [output_file.wav] [stretch_ratio]
 ```
 
 ## References
