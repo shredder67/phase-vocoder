@@ -6,9 +6,7 @@ if [ ! -d "env" ]; then
     source env/bin/activate
     pip install -r requirements.txt
 else
-    echo "Env located, installing missing deps..."
     source env/bin/activate
-    pip install -q -r requirements.txt
 fi
 
 echo "Env ready, executing script!"
