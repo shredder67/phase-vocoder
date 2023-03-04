@@ -42,7 +42,7 @@ def stft(x: np.ndarray, sr:int,  N: int, hop_size: int) -> np.ndarray:
     w = get_hann_values(N)
     for i in range(frames):
         frame = x[i*hop_size:i*hop_size + N] * w
-        X[:, i] = spft.fft(frame / np.sqrt(N), N)[:freq_bins]
+        X[:, i] = spft.fft(frame, N)[:freq_bins]
     return X
 
 
@@ -58,16 +58,18 @@ def processing(X: np.ndarray, sr: int, hs_a: int, hs_s: int) -> np.ndarray:
     `X_s: np.ndarray` - freq_bins/frames matrix
     """
     w_bin = (np.arange(X.shape[0]) * sr / X.shape[0]) # freqs per each bin
+    w_bin = np.broadcast_to(w_bin, X.shape[::-1]).T
     dt_a = hs_a / sr
     dt_s = hs_s / sr
     ph_a = np.angle(X)
+    ph_delta = np.diff(ph_a, axis=1, prepend=ph_a[:, np.newaxis, 0]) / dt_a
+    ph_delta = ph_delta - w_bin
+    ph_delta = np.mod(ph_delta + pi, 2*pi) - pi
+    fr_true = ph_delta + w_bin
+
     ph_s = np.zeros_like(ph_a)
     for i in range(1, X.shape[1]):
-        ph_delta = ph_a[:, i] - ph_a[:, i-1]
-        ph_delta = ph_delta / dt_a - w_bin
-        ph_delta = np.mod(ph_delta + pi, 2*pi) - pi
-        fr_true = ph_delta + w_bin
-        ph_s[:, i] = ph_a[:, i-1] + dt_s * fr_true
+        ph_s[:, i] = ph_a[:, i-1] + dt_s * fr_true[:, i]
     X_s = np.abs(X) * np.exp(1j * ph_s)       
     return X_s
 
@@ -86,15 +88,10 @@ def synthesis(X: np.ndarray, n: int, new_n: int, sr: int, N: int, hs_a: int, hs_
     ## Returns:
     `y: np.ndarray` - synthesized signal (stretched or compressed without changed pitch)
     """
-    q = np.zeros((X.shape[1], new_n))
     y = np.zeros(new_n)
     w = get_hann_values(N)
     for i in range(X.shape[1]):
-        q[i, i*hs_s:i*hs_s + N] = np.real(spft.ifft(X[:, i] * np.sqrt(2*N), N)) * w
-    
-    # add overlapping windows
-    for i in range(X.shape[1]):
-        y[i*hs_s:i*hs_s + N] += q[i, i*hs_s:i*hs_s + N]
+        y[i*hs_s:i*hs_s + N] += np.real(spft.ifft(X[:, i], N)) * w
     return y
 
 

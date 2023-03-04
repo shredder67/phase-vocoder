@@ -1,6 +1,9 @@
 from src import *
-import numpy as np
+
 import time
+
+import numpy as np
+import click
 
 
 class TestPerformance:
@@ -24,10 +27,12 @@ class TestPerformance:
             times.append(dt)
         return np.mean(times), np.std(times)
 
-# cur:  0.272 +- 0.014ms
-def test_performance():
+
+@click.command()
+@click.option('--n', default=10, help='number of test runs')
+def test_performance(n):
     test = TestPerformance()
-    print("phase vocoder avg exec time: {:.3f} +- {:.3f}ms".format(*test.mean_and_std_time()))
+    print("phase vocoder avg exec time: {:.3f} +- {:.3f}ms".format(*test.mean_and_std_time(n)))
 
 
 if __name__ == '__main__':
