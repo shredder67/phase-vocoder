@@ -9,7 +9,7 @@ A small program written as a test case during application to VK Marusya team. Pr
 ## Install and run
 
 ```
-git@github.com:shredder67/phase-vocoder.git
+git clone git@github.com:shredder67/phase-vocoder.git
 cd phase-vocoder
 ```
 
